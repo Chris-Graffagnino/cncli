@@ -7,8 +7,8 @@ function getStatus() {
     local result
     result=$(/usr/local/bin/cncli status \
         --db /root/scripts/cncli.db \
-        --byron-genesis /home/cardano-node/config/mainnet-byron-genesis.json \
-        --shelley-genesis /home/cardano-node/config/mainnet-shelley-genesis.json \
+        --byron-genesis /home/cardano/files/mainnet-byron-genesis.json \
+        --shelley-genesis /home/cardano/files/mainnet-shelley-genesis.json \
         | jq -r .status
     )
     echo "$result"
@@ -17,10 +17,10 @@ function getStatus() {
 function getLeader() {
     /usr/local/bin/cncli leaderlog \
         --db /root/scripts/cncli.db \
-        --pool-id 00beef284975ef87856c1343f6bf50172253177fdebc756524d43fc1 \
-        --pool-vrf-skey /home/cardano-node/keys/vrf.skey \
-        --byron-genesis /home/cardano-node/config/mainnet-byron-genesis.json \
-        --shelley-genesis /home/cardano-node/config/mainnet-shelley-genesis.json \
+        --pool-id \
+        --pool-vrf-skey /home/cardano/files/vrf.skey \
+        --byron-genesis /home/cardano/files/mainnet-byron-genesis.json \
+        --shelley-genesis /home/cardano/files/mainnet-shelley-genesis.json \
         --ledger-set "$epoch" \
         --tz "$timezone"
 }
