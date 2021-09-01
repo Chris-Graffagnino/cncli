@@ -136,13 +136,13 @@ fn get_tip_slot_number(db: &Connection) -> Result<i64, rusqlite::Error> {
 }
 
 fn get_eta_v_before_slot(db: &Connection, slot_number: i64) -> Result<String, rusqlite::Error> {
-    db.query_row("SELECT eta_v FROM chain WHERE orphaned = 0 AND slot_number < ?1 AND ?1 - slot_number < 120 ORDER BY slot_number DESC LIMIT 1", &[&slot_number], |row| {
+    db.query_row("SELECT eta_v FROM chain WHERE orphaned = 0 AND slot_number < ?1 AND ?1 - slot_number < 240 ORDER BY slot_number DESC LIMIT 1", &[&slot_number], |row| {
         row.get(0)
     })
 }
 
 fn get_prev_hash_before_slot(db: &Connection, slot_number: i64) -> Result<String, rusqlite::Error> {
-    db.query_row("SELECT prev_hash FROM chain WHERE orphaned = 0 AND slot_number < ?1 AND ?1 - slot_number < 120 ORDER BY slot_number DESC LIMIT 1", &[&slot_number], |row| {
+    db.query_row("SELECT prev_hash FROM chain WHERE orphaned = 0 AND slot_number < ?1 AND ?1 - slot_number < 240 ORDER BY slot_number DESC LIMIT 1", &[&slot_number], |row| {
         row.get(0)
     })
 }
@@ -500,7 +500,7 @@ pub(crate) fn calculate_leader_logs(
                                                     let assigned_slots = (0..shelley.epoch_length)
                                                         .par_bridge() // <--- use rayon parallel bridge
                                                         .map(|slot_in_epoch| first_slot_of_epoch + slot_in_epoch)
-                                                        .filter(|epoch_slot| !is_overlay_slot(&first_slot_of_epoch, &epoch_slot, &ledger_info.decentralization))
+                                                        .filter(|epoch_slot| !is_overlay_slot(&first_slot_of_epoch, epoch_slot, &ledger_info.decentralization))
                                                         .filter_map(|leader_slot| {
                                                             match is_slot_leader(leader_slot, &sigma, &epoch_nonce, &pool_vrf_skey.key, &cert_nat_max, &c) {
                                                                 Ok(true) => Some(leader_slot),
